@@ -1,6 +1,7 @@
 from time import time
 import logging
 import multiprocessing
+import concurrent.futures
 import os
 
 
@@ -34,6 +35,12 @@ if __name__ == '__main__':
     with multiprocessing.Pool(processes=4) as pool:
         pool.map(factorize, (128, 255, 99999, 10651060))
         logging.debug("Pool speed: {:0.5f} s (used 4 CPUs)".format(time() - t2))
+
+    t3 = time()
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        executor.map(factorize, (128, 255, 99999, 10651060))
+        logging.debug("ExecutorPool Speed: {:0.5f} s".format(time() - t3))
 
     cpuCount = os.cpu_count()
     print("Number of CPUs in the system:", cpuCount)
